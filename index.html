@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Bài kiểm tra: Số thập phân hữu hạn, vô hạn tuần hoàn, làm tròn số - Toán 7</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{overscroll-behavior:none}
+body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#eef2f7;color:#1f2937;line-height:1.6;padding:16px;
+  -webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
+  -webkit-touch-callout:none}
+.wrap{max-width:900px;margin:0 auto;transition:filter .25s}
+header{background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border-radius:16px;padding:22px;text-align:center;box-shadow:0 8px 24px rgba(37,99,235,.25)}
+header .date{font-size:.95rem;font-weight:600;opacity:.92;margin-bottom:6px}
+header h1{font-size:1.2rem;margin-bottom:4px;letter-spacing:.3px}
+.card{background:#fff;border-radius:14px;padding:16px;margin-top:16px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.info{display:flex;gap:12px;flex-wrap:wrap}
+.info .field{flex:1;min-width:200px}
+label.lbl{font-weight:700;font-size:.9rem;display:block;margin-bottom:5px;color:#334155}
+input[type=text]{width:100%;padding:12px 13px;border:2px solid #dbe3ee;border-radius:10px;font-size:16px;outline:none;transition:.2s;font-family:inherit;-webkit-appearance:none}
+input[type=text]:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+.status-bar{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center;background:#f8fafc;border:1.5px solid #e6ebf3;border-radius:12px;padding:12px 14px;margin-top:14px}
+.status-bar .item{font-weight:700;font-size:.92rem;color:#1e293b;display:flex;align-items:center;gap:6px}
+.status-bar .item .val{color:#dc2626;font-weight:900;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.status-bar .item .val.ok{color:#16a34a}
+.status-bar .item .val.warn{color:#f59e0b}
+.status-bar .item .val.danger{color:#dc2626;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.part-title{background:#f1f5ff;border-left:5px solid #2563eb;padding:11px 15px;border-radius:8px;font-weight:800;color:#1e40af;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;font-size:.95rem}
+.part-title .pt{font-size:.8rem;font-weight:700;color:#64748b}
+.q{padding:14px;border:1.5px solid #e6ebf3;border-radius:12px;margin-bottom:12px;background:#fcfdff}
+.qtext{font-weight:600;margin-bottom:10px;font-size:1rem}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:620px){.opts{grid-template-columns:1fr}}
+.opt{display:flex;align-items:center;gap:9px;padding:12px 13px;border:1.5px solid #dbe3ee;border-radius:10px;cursor:pointer;transition:.15s;background:#fff;font-size:.98rem;min-height:48px}
+.opt:active{background:#f0f5ff;border-color:#93b4f5}
+.opt input{accent-color:#2563eb;width:20px;height:20px;cursor:pointer;flex-shrink:0}
+.tf{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fill input{max-width:100%;font-size:1.1rem;font-weight:600;text-align:center;letter-spacing:.5px}
+.btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+button{flex:1;min-width:150px;padding:16px;border:none;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;transition:.2s;font-family:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+#btnSubmit{background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;box-shadow:0 6px 18px rgba(37,99,235,.3)}
+#btnSend{background:linear-gradient(135deg,#16a34a,#059669);color:#fff;box-shadow:0 6px 18px rgba(22,163,74,.3)}
+button:active{transform:scale(.98)}
+button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+#result{display:none;text-align:center;margin-top:16px}
+#result.show{display:block}
+.score-big{font-size:2.8rem;font-weight:900;color:#2563eb;line-height:1.2}
+.score-detail{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.score-detail div{background:#f1f5f9;padding:9px 16px;border-radius:10px;font-weight:700;font-size:.9rem}
+.time-info{margin-top:14px;font-weight:700;color:#dc2626;font-size:1rem}
+.foot{text-align:center;color:#475569;font-size:.82rem;margin:22px 0 10px;font-weight:600;padding:0 8px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(200%);background:#0f172a;color:#fff;padding:13px 20px;border-radius:12px;font-weight:700;transition:.35s;z-index:99;max-width:90%;text-align:center;font-size:.92rem}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.warn{background:#dc2626}
+.notice{background:#fff7ed;border-left:5px solid #f59e0b;color:#92400e;padding:11px 15px;border-radius:8px;font-size:.88rem;font-weight:600;margin-top:14px;line-height:1.55}
+sup{font-size:.72em;vertical-align:super;line-height:0}
+.frac{display:inline-block;vertical-align:middle;text-align:center;margin:0 2px}
+.frac .num{display:block;border-bottom:1.5px solid #1f2937;padding:0 3px}
+.frac .den{display:block;padding:0 3px}
+
+.blur-overlay{position:fixed;inset:0;background:rgba(15,23,42,.96);color:#fff;display:none;align-items:center;justify-content:center;z-index:9998;font-size:1.2rem;font-weight:800;text-align:center;padding:24px;line-height:1.6;flex-direction:column}
+.blur-overlay.show{display:flex}
+.blur-overlay .big{font-size:3rem;margin-bottom:16px}
+.blur-overlay .sub{font-size:.78em;opacity:.85;margin-top:14px;font-weight:600}
+body.blurred .wrap{filter:blur(20px);pointer-events:none}
+
+.warn-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:9999;padding:16px}
+.warn-modal.show{display:flex}
+.warn-box{background:#fff;border-radius:16px;max-width:480px;width:100%;padding:24px;text-align:center;border-top:6px solid #dc2626;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.warn-box h2{color:#dc2626;font-size:1.2rem;margin-bottom:10px}
+.warn-box p{color:#334155;margin-bottom:10px;font-size:.95rem;line-height:1.55}
+.warn-box .count{display:inline-block;background:#fef3c7;color:#92400e;font-weight:900;padding:6px 14px;border-radius:20px;margin:8px 0;font-size:1rem}
+.warn-box button{margin-top:14px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;padding:14px;border-radius:10px;width:100%;font-weight:800;border:none;cursor:pointer;font-size:1rem}
+
+.start-overlay{position:fixed;inset:0;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;text-align:center}
+.start-overlay .box{max-width:480px;width:100%}
+.start-overlay h1{font-size:1.15rem;margin-bottom:16px}
+.start-overlay ul{text-align:left;background:rgba(255,255,255,.08);padding:16px 20px;border-radius:12px;font-size:.92rem;line-height:1.8;margin-bottom:18px}
+.start-overlay li{margin-bottom:4px}
+.start-overlay button{background:linear-gradient(135deg,#16a34a,#059669);color:#fff;padding:16px 24px;border:none;border-radius:12px;font-weight:800;font-size:1.05rem;cursor:pointer;width:100%}
+.start-overlay.hide{display:none}
+</style>
+</head>
+<body>
+
+<div class="start-overlay" id="startOverlay">
+  <div class="box">
+    <h1>📘 BÀI KIỂM TRA: SỐ THẬP PHÂN HỮU HẠN, VÔ HẠN TUẦN HOÀN, LÀM TRÒN SỐ</h1>
+    <ul>
+      <li>⏱️ Bài làm <b>một lần duy nhất, Lấy vở kiểm tra để ghi lại bài làm</b></li>
+      <li>🚫 <b>Không</b> được rời khỏi màn hình làm bài</li>
+      <li>👁️ Hệ thống <b>ghi nhận mọi lần chuyển app/tab</b></li>
+      <li>⚠️ Rời màn hình <b>3 lần</b> → <b>tự động nộp bài</b></li>
+      <li>⏳ Rời màn hình quá <b>30 giây</b> → <b>tự động nộp bài</b></li>
+      <li>📵 Chuyển sang app khác để tra Google/ChatGPT đều bị phát hiện</li>
+    </ul>
+    <button id="btnStart">✅ TÔI ĐÃ HIỂU – BẮT ĐẦU LÀM BÀI</button>
+  </div>
+</div>
+
+<div class="wrap" id="mainWrap">
+
+  <header>
+    <div class="date">📅 Ngày 28 tháng 9 năm 2026</div>
+    <h1>📘 BÀI KIỂM TRA: SỐ THẬP PHÂN HỮU HẠN, VÔ HẠN TUẦN HOÀN, LÀM TRÒN SỐ</h1>
+  </header>
+
+  <div class="card info">
+    <div class="field">
+      <label class="lbl">Họ và tên học sinh</label>
+      <input type="text" id="sName" placeholder="Nhập họ và tên..." autocomplete="off">
+    </div>
+    <div class="field">
+      <label class="lbl">Lớp</label>
+      <input type="text" id="sClass" placeholder="Ví dụ: 7A" autocomplete="off">
+    </div>
+    <div class="notice">⚠️ <b>Bắt buộc:</b> Không được thoát khỏi màn hình này. Hệ thống đang giám sát.</div>
+  </div>
+
+  <div class="status-bar">
+    <div class="item">⏱️ Thời gian: <span class="val" id="timerInfo">00:00</span></div>
+    <div class="item">👁️ Rời màn hình: <span class="val ok" id="violationInfo">0 / 3</span></div>
+  </div>
+
+  <div class="card" id="part1">
+    <div class="part-title">
+      <span>PHẦN I. CHỌN ĐÁP ÁN ĐÚNG NHẤT (12 câu)</span>
+      <span class="pt">3,0 điểm – 0,25đ/câu</span>
+    </div>
+    <div id="p1box"></div>
+  </div>
+
+  <div class="card" id="part2">
+    <div class="part-title">
+      <span>PHẦN II. CHỌN ĐÚNG – SAI (8 câu)</span>
+      <span class="pt">4,0 điểm – 0,5đ/câu</span>
+    </div>
+    <div id="p2box"></div>
+  </div>
+
+  <div class="card" id="part3">
+    <div class="part-title">
+      <span>PHẦN III. ĐIỀN ĐÁP ÁN VÀO Ô TRỐNG (6 câu)</span>
+      <span class="pt">3,0 điểm – 0,5đ/câu</span>
+    </div>
+    <div id="p3box"></div>
+  </div>
+
+  <div class="btns">
+    <button id="btnSubmit">✅ CHẤM BÀI VÀ GỬI KẾT QUẢ</button>
+    <button id="btnSend" disabled style="display:none">📤 GỬI LẠI KẾT QUẢ</button>
+  </div>
+
+  <div class="card" id="result">
+    <div>Kết quả của bạn</div>
+    <div class="score-big" id="scoreBig">0</div>
+    <div class="score-detail" id="scoreDetail"></div>
+    <div class="time-info" id="timeResult"></div>
+  </div>
+
+  <div class="foot">Bản quyền của GV: Hoàng Anh Dũng - Trường THCS Tây Thái Ninh</div>
+</div>
+
+<div class="blur-overlay" id="blurOverlay">
+  <div class="big">🚫</div>
+  <div>BÀI LÀM ĐANG BỊ TẠM ẨN</div>
+  <div class="sub">Hệ thống phát hiện bạn vừa rời khỏi màn hình làm bài.<br>Hành vi này đã được ghi lại và báo cho giáo viên.<br>Hãy quay lại làm bài ngay!</div>
+</div>
+
+<div class="warn-modal" id="warnModal">
+  <div class="warn-box">
+    <h2>⚠️ CẢNH BÁO VI PHẠM</h2>
+    <p id="warnMsg">Bạn vừa rời khỏi màn hình làm bài.</p>
+    <div class="count" id="warnCount">Lần 1 / 3</div>
+    <p style="font-size:.85rem;color:#64748b">Vi phạm <b>lần thứ 3</b> hoặc rời màn hình quá <b>30 giây</b> sẽ bị <b>tự động nộp bài</b> ngay lập tức.</p>
+    <button id="warnBtn">ĐÃ HIỂU – QUAY LẠI BÀI LÀM</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================== NGÂN HÀNG CÂU HỎI ================== */
+/* PHẦN I: 40 câu MCQ – rút ngẫu nhiên 12 câu */
+const MCQ = [
+ /* ---- Số thập phân hữu hạn (10 câu) ---- */
+ {q:"Phân số nào sau đây viết được dưới dạng số thập phân hữu hạn?",
+  a:"3/8", opts:["3/8","5/12","7/15","2/9"]},
+ {q:"Số thập phân hữu hạn là số thập phân:",
+  a:"Có phần thập phân kết thúc (hữu hạn chữ số)",
+  opts:["Có phần thập phân kết thúc (hữu hạn chữ số)","Có phần thập phân lặp lại mãi","Không viết được dưới dạng phân số","Luôn là số nguyên"]},
+ {q:"Phân số 1/4 viết dưới dạng số thập phân là:",
+  a:"0,25", opts:["0,25","0,4","0,5","0,2"]},
+ {q:"Phân số 3/5 viết dưới dạng số thập phân là:",
+  a:"0,6", opts:["0,6","0,5","0,35","0,3"]},
+ {q:"Phân số 7/8 viết dưới dạng số thập phân là:",
+  a:"0,875", opts:["0,875","0,78","0,85","0,75"]},
+ {q:"Phân số 1/2 viết dưới dạng số thập phân là:",
+  a:"0,5", opts:["0,5","0,2","0,25","0,05"]},
+ {q:"Phân số nào sau đây viết được dưới dạng số thập phân hữu hạn?",
+  a:"7/20", opts:["7/20","5/6","8/15","4/9"]},
+ {q:"Phân số nào sau đây viết được dưới dạng số thập phân hữu hạn?",
+  a:"9/25", opts:["9/25","7/12","5/18","11/30"]},
+ {q:"Điều kiện để một phân số tối giản viết được dưới dạng số thập phân hữu hạn là:",
+  a:"Mẫu chỉ có ước nguyên tố 2 và 5",
+  opts:["Mẫu chỉ có ước nguyên tố 2 và 5","Mẫu chỉ có ước nguyên tố 3 và 7","Mẫu là số chẵn","Tử chia hết cho mẫu"]},
+ {q:"Số 0,125 viết dưới dạng phân số tối giản là:",
+  a:"1/8", opts:["1/8","125/100","5/40","1/4"]},
+
+ /* ---- Số thập phân vô hạn tuần hoàn (10 câu) ---- */
+ {q:"Phân số nào sau đây viết được dưới dạng số thập phân vô hạn tuần hoàn?",
+  a:"1/3", opts:["1/3","1/2","1/4","1/5"]},
+ {q:"Số thập phân vô hạn tuần hoàn là số thập phân:",
+  a:"Có phần thập phân lặp lại mãi theo chu kỳ",
+  opts:["Có phần thập phân lặp lại mãi theo chu kỳ","Có phần thập phân kết thúc","Luôn là số nguyên","Không viết được dưới dạng phân số"]},
+ {q:"Phân số 1/3 viết dưới dạng số thập phân vô hạn tuần hoàn là:",
+  a:"0,(3)", opts:["0,(3)","0,3","0,33","0,333"]},
+ {q:"Phân số 1/6 viết dưới dạng số thập phân vô hạn tuần hoàn là:",
+  a:"0,1(6)", opts:["0,1(6)","0,(16)","0,16","0,1(66)"]},
+ {q:"Phân số 5/9 viết dưới dạng số thập phân vô hạn tuần hoàn là:",
+  a:"0,(5)", opts:["0,(5)","0,5","0,(55)","0,55"]},
+ {q:"Phân số 2/11 viết dưới dạng số thập phân vô hạn tuần hoàn là:",
+  a:"0,(18)", opts:["0,(18)","0,18","0,1(8)","0,(81)"]},
+ {q:"Số 0,(6) viết dưới dạng phân số tối giản là:",
+  a:"2/3", opts:["2/3","6/10","3/5","6/9"]},
+ {q:"Số 0,(3) viết dưới dạng phân số tối giản là:",
+  a:"1/3", opts:["1/3","3/10","3/9","1/2"]},
+ {q:"Chu kỳ của số thập phân vô hạn tuần hoàn 0,1(6) là:",
+  a:"6", opts:["6","16","1","66"]},
+ {q:"Phân số nào sau đây viết được dưới dạng số thập phân vô hạn tuần hoàn?",
+  a:"7/12", opts:["7/12","7/8","9/20","3/25"]},
+
+ /* ---- Làm tròn số (10 câu) ---- */
+ {q:"Làm tròn số 3,14159 đến hàng phần trăm ta được:",
+  a:"3,14", opts:["3,14","3,15","3,1","3,142"]},
+ {q:"Làm tròn số 2,71828 đến hàng phần nghìn ta được:",
+  a:"2,718", opts:["2,718","2,719","2,72","2,7"]},
+ {q:"Làm tròn số 12,3456 đến hàng phần chục ta được:",
+  a:"12,3", opts:["12,3","12,4","12,35","12,34"]},
+ {q:"Làm tròn số 7,85 đến hàng đơn vị ta được:",
+  a:"8", opts:["7","8","7,9","9"]},
+ {q:"Làm tròn số 1234,567 đến hàng chục ta được:",
+  a:"1230", opts:["1230","1240","1235","1200"]},
+ {q:"Làm tròn số 9,99 đến hàng phần chục ta được:",
+  a:"10,0", opts:["9,9","10,0","10","9,10"]},
+ {q:"Làm tròn số 0,666... đến hàng phần trăm ta được:",
+  a:"0,67", opts:["0,67","0,66","0,7","0,6"]},
+ {q:"Làm tròn số 45,6789 đến hàng phần trăm ta được:",
+  a:"45,68", opts:["45,68","45,67","45,7","45,69"]},
+ {q:"Quy tắc làm tròn số: nếu chữ số đầu tiên bỏ đi nhỏ hơn 5 thì:",
+  a:"Giữ nguyên bộ phận còn lại",
+  opts:["Giữ nguyên bộ phận còn lại","Tăng thêm 1 đơn vị","Bỏ đi toàn bộ","Làm tròn lên"]},
+ {q:"Quy tắc làm tròn số: nếu chữ số đầu tiên bỏ đi lớn hơn hoặc bằng 5 thì:",
+  a:"Tăng thêm 1 đơn vị vào chữ số cuối cùng giữ lại",
+  opts:["Tăng thêm 1 đơn vị vào chữ số cuối cùng giữ lại","Giữ nguyên","Bỏ đi toàn bộ","Làm tròn xuống"]}
+];
+
+/* PHẦN II: 40 câu Đúng/Sai – rút ngẫu nhiên 8 câu */
+const TF = [
+ /* ---- Số thập phân hữu hạn (12 câu) ---- */
+ {q:"Phân số 3/8 viết được dưới dạng số thập phân hữu hạn.", a:true},
+ {q:"Phân số 5/12 viết được dưới dạng số thập phân hữu hạn.", a:false},
+ {q:"Phân số 1/4 viết được dưới dạng số thập phân hữu hạn.", a:true},
+ {q:"Phân số 2/9 viết được dưới dạng số thập phân hữu hạn.", a:false},
+ {q:"Số 0,25 là số thập phân hữu hạn.", a:true},
+ {q:"Số 0,333... là số thập phân hữu hạn.", a:false},
+ {q:"Phân số 7/20 viết được dưới dạng số thập phân hữu hạn.", a:true},
+ {q:"Phân số 8/15 viết được dưới dạng số thập phân hữu hạn.", a:false},
+ {q:"Điều kiện để phân số tối giản viết được dưới dạng số thập phân hữu hạn là mẫu chỉ có ước nguyên tố 2 và 5.", a:true},
+ {q:"Mọi phân số đều viết được dưới dạng số thập phân hữu hạn.", a:false},
+ {q:"Số 0,5 là số thập phân hữu hạn.", a:true},
+ {q:"Số 0,1(6) là số thập phân hữu hạn.", a:false},
+
+ /* ---- Số thập phân vô hạn tuần hoàn (14 câu) ---- */
+ {q:"Phân số 1/3 viết được dưới dạng số thập phân vô hạn tuần hoàn.", a:true},
+ {q:"Phân số 1/2 viết được dưới dạng số thập phân vô hạn tuần hoàn.", a:false},
+ {q:"Số 0,(3) là số thập phân vô hạn tuần hoàn.", a:true},
+ {q:"Số 0,25 là số thập phân vô hạn tuần hoàn.", a:false},
+ {q:"Phân số 5/9 viết được dưới dạng số thập phân vô hạn tuần hoàn.", a:true},
+ {q:"Phân số 3/4 viết được dưới dạng số thập phân vô hạn tuần hoàn.", a:false},
+ {q:"Chu kỳ của số 0,(3) là 3.", a:true},
+ {q:"Chu kỳ của số 0,1(6) là 16.", a:false},
+ {q:"Số 0,(6) bằng phân số 2/3.", a:true},
+ {q:"Số 0,(3) bằng phân số 3/10.", a:false},
+ {q:"Mọi số thập phân vô hạn tuần hoàn đều viết được dưới dạng phân số.", a:true},
+ {q:"Số 0,(18) có chu kỳ là 18.", a:true},
+ {q:"Phân số 7/12 viết được dưới dạng số thập phân vô hạn tuần hoàn.", a:true},
+ {q:"Phân số 9/25 viết được dưới dạng số thập phân vô hạn tuần hoàn.", a:false},
+
+ /* ---- Làm tròn số (14 câu) ---- */
+ {q:"Làm tròn số 3,14159 đến hàng phần trăm ta được 3,14.", a:true},
+ {q:"Làm tròn số 2,71828 đến hàng phần nghìn ta được 2,718.", a:true},
+ {q:"Làm tròn số 7,85 đến hàng đơn vị ta được 7.", a:false},
+ {q:"Làm tròn số 12,3456 đến hàng phần chục ta được 12,3.", a:true},
+ {q:"Làm tròn số 9,99 đến hàng phần chục ta được 9,9.", a:false},
+ {q:"Làm tròn số 1234,567 đến hàng chục ta được 1230.", a:true},
+ {q:"Khi làm tròn số, nếu chữ số đầu tiên bỏ đi nhỏ hơn 5 thì giữ nguyên bộ phận còn lại.", a:true},
+ {q:"Khi làm tròn số, nếu chữ số đầu tiên bỏ đi lớn hơn hoặc bằng 5 thì giữ nguyên bộ phận còn lại.", a:false},
+ {q:"Làm tròn số 0,666... đến hàng phần trăm ta được 0,67.", a:true},
+ {q:"Làm tròn số 45,6789 đến hàng phần trăm ta được 45,67.", a:false},
+ {q:"Làm tròn số 8,5 đến hàng đơn vị ta được 9.", a:true},
+ {q:"Làm tròn số 8,4 đến hàng đơn vị ta được 9.", a:false},
+ {q:"Làm tròn số 100,999 đến hàng đơn vị ta được 101.", a:true},
+ {q:"Làm tròn số 0,05 đến hàng phần chục ta được 0,1.", a:false}
+];
+
+/* PHẦN III: 40 câu điền đáp án – rút ngẫu nhiên 6 câu */
+const FILL = [
+ /* ---- Số thập phân hữu hạn (13 câu) ---- */
+ {q:"Viết phân số 1/4 dưới dạng số thập phân: ...", a:"0,25"},
+ {q:"Viết phân số 3/5 dưới dạng số thập phân: ...", a:"0,6"},
+ {q:"Viết phân số 7/8 dưới dạng số thập phân: ...", a:"0,875"},
+ {q:"Viết phân số 1/2 dưới dạng số thập phân: ...", a:"0,5"},
+ {q:"Viết phân số 3/4 dưới dạng số thập phân: ...", a:"0,75"},
+ {q:"Viết phân số 1/5 dưới dạng số thập phân: ...", a:"0,2"},
+ {q:"Viết phân số 7/20 dưới dạng số thập phân: ...", a:"0,35"},
+ {q:"Viết phân số 9/25 dưới dạng số thập phân: ...", a:"0,36"},
+ {q:"Viết phân số 1/8 dưới dạng số thập phân: ...", a:"0,125"},
+ {q:"Viết số 0,25 dưới dạng phân số tối giản: ... (nhập dạng a/b)", a:"1/4"},
+ {q:"Viết số 0,5 dưới dạng phân số tối giản: ... (nhập dạng a/b)", a:"1/2"},
+ {q:"Viết số 0,75 dưới dạng phân số tối giản: ... (nhập dạng a/b)", a:"3/4"},
+ {q:"Viết số 0,125 dưới dạng phân số tối giản: ... (nhập dạng a/b)", a:"1/8"},
+
+ /* ---- Số thập phân vô hạn tuần hoàn (14 câu) ---- */
+ {q:"Viết phân số 1/3 dưới dạng số thập phân vô hạn tuần hoàn: ... (nhập dạng 0,(x))", a:"0,(3)"},
+ {q:"Viết phân số 2/3 dưới dạng số thập phân vô hạn tuần hoàn: ... (nhập dạng 0,(x))", a:"0,(6)"},
+ {q:"Viết phân số 1/6 dưới dạng số thập phân vô hạn tuần hoàn: ... (nhập dạng 0,x(y))", a:"0,1(6)"},
+ {q:"Viết phân số 5/9 dưới dạng số thập phân vô hạn tuần hoàn: ... (nhập dạng 0,(x))", a:"0,(5)"},
+ {q:"Viết phân số 2/11 dưới dạng số thập phân vô hạn tuần hoàn: ... (nhập dạng 0,(xy))", a:"0,(18)"},
+ {q:"Viết phân số 1/9 dưới dạng số thập phân vô hạn tuần hoàn: ... (nhập dạng 0,(x))", a:"0,(1)"},
+ {q:"Viết phân số 4/9 dưới dạng số thập phân vô hạn tuần hoàn: ... (nhập dạng 0,(x))", a:"0,(4)"},
+ {q:"Viết phân số 7/9 dưới dạng số thập phân vô hạn tuần hoàn: ... (nhập dạng 0,(x))", a:"0,(7)"},
+ {q:"Viết số 0,(3) dưới dạng phân số tối giản: ... (nhập dạng a/b)", a:"1/3"},
+ {q:"Viết số 0,(6) dưới dạng phân số tối giản: ... (nhập dạng a/b)", a:"2/3"},
+ {q:"Viết số 0,(1) dưới dạng phân số tối giản: ... (nhập dạng a/b)", a:"1/9"},
+ {q:"Viết số 0,(5) dưới dạng phân số tối giản: ... (nhập dạng a/b)", a:"5/9"},
+ {q:"Chu kỳ của số 0,1(6) là: ...", a:"6"},
+ {q:"Chu kỳ của số 0,(18) là: ...", a:"18"},
+
+ /* ---- Làm tròn số (13 câu) ---- */
+ {q:"Làm tròn số 3,14159 đến hàng phần trăm: ...", a:"3,14"},
+ {q:"Làm tròn số 2,71828 đến hàng phần nghìn: ...", a:"2,718"},
+ {q:"Làm tròn số 12,3456 đến hàng phần chục: ...", a:"12,3"},
+ {q:"Làm tròn số 7,85 đến hàng đơn vị: ...", a:"8"},
+ {q:"Làm tròn số 1234,567 đến hàng chục: ...", a:"1230"},
+ {q:"Làm tròn số 9,99 đến hàng phần chục: ...", a:"10,0"},
+ {q:"Làm tròn số 0,666... đến hàng phần trăm: ...", a:"0,67"},
+ {q:"Làm tròn số 45,6789 đến hàng phần trăm: ...", a:"45,68"},
+ {q:"Làm tròn số 8,5 đến hàng đơn vị: ...", a:"9"},
+ {q:"Làm tròn số 8,4 đến hàng đơn vị: ...", a:"8"},
+ {q:"Làm tròn số 100,999 đến hàng đơn vị: ...", a:"101"},
+ {q:"Làm tròn số 5,678 đến hàng phần chục: ...", a:"5,7"},
+ {q:"Làm tròn số 15,432 đến hàng đơn vị: ...", a:"15"}
+];
+
+/* ================== CẤU HÌNH ================== */
+const SO_C1 = 12, SO_C2 = 8, SO_C3 = 6;
+const DIEM_C1 = 0.25, DIEM_C2 = 0.5, DIEM_C3 = 0.5;
+const SEND_URL = "https://script.google.com/macros/s/AKfycbwtA3cBHNGpCJX3BG83EZ76tYJwjbDrBMD1pKrEz8_9xae9m05eMl8y4Bdevp4Tbc2G/exec";
+
+const MAX_VIOLATIONS = 3;
+const MAX_LEAVE_SECONDS = 30;
+const GRACE_SECONDS = 1;
+
+/* ================== TIỆN ÍCH ================== */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function pad2(n){ return String(n).padStart(2,'0'); }
+function fmt(sec){
+  sec = Math.max(0, Math.floor(sec));
+  const h = Math.floor(sec/3600);
+  const m = Math.floor((sec%3600)/60);
+  const s = sec%60;
+  return (h>0 ? pad2(h)+':' : '') + pad2(m)+':'+pad2(s);
+}
+function toast(msg, isWarn){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('warn', !!isWarn);
+  t.classList.add('show');
+  clearTimeout(t._tm);
+  t._tm = setTimeout(()=>t.classList.remove('show'), 2800);
+}
+function norm(s){
+  if(s === null || s === undefined) return "";
+  let t = String(s).trim()
+    .replace(/\s+/g,"")
+    .replace(/−/g,"-")
+    .toUpperCase();
+  /* Chuẩn hoá dấu phẩy thập phân: chấp nhận cả "," và "." */
+  /* Nhưng giữ nguyên dạng phân số a/b */
+  if(t.indexOf("/") === -1){
+    t = t.replace(/,/g,".");
+  }
+  /* Bỏ số 0 thừa ở đầu số nguyên */
+  if(/^-?\d+(\.\d+)?$/.test(t)){
+    t = t.replace(/^(-?)0+(\d)/, "$1$2");
+  }
+  return t;
+}
+function eqAns(a, b){
+  if(a === null || b === null) return false;
+  return norm(a) === norm(b);
+}
+
+/* ================== TRẠNG THÁI ================== */
+let state = {
+  p1:[], p2:[], p3:[],
+  graded:false,
+  sent:false,
+  diem:{c1:0,c2:0,c3:0,total:0},
+  startTime:0,
+  elapsedSeconds:0,
+  timerId:null,
+  cauDung:"",
+  violations: 0,
+  violationLog: [],
+  leaveTime: 0,
+  leaveTimerId: null,
+  examStarted: false
+};
+
+/* ================== ĐỒNG HỒ ================== */
+function startTimer(){
+  state.startTime = Date.now();
+  state.elapsedSeconds = 0;
+  updateTimerUI();
+  state.timerId = setInterval(()=>{
+    state.elapsedSeconds = Math.floor((Date.now() - state.startTime)/1000);
+    updateTimerUI();
+  }, 250);
+}
+function stopTimer(){
+  if(state.timerId){ clearInterval(state.timerId); state.timerId = null; }
+  if(state.startTime){
+    state.elapsedSeconds = Math.floor((Date.now() - state.startTime)/1000);
+  }
+  updateTimerUI();
+}
+function updateTimerUI(){
+  document.getElementById('timerInfo').textContent = fmt(state.elapsedSeconds);
+}
+function updateViolationUI(){
+  const el = document.getElementById('violationInfo');
+  el.textContent = state.violations + " / " + MAX_VIOLATIONS;
+  el.className = 'val ' + (state.violations === 0 ? 'ok' : state.violations < MAX_VIOLATIONS ? 'warn' : 'danger');
+}
+
+/* ================== TẠO ĐỀ (TRỘN CÂU + TRỘN ĐÁP ÁN) ================== */
+function buildQuiz(){
+  state.graded = false;
+  state.sent = false;
+  state.diem = {c1:0,c2:0,c3:0,total:0};
+
+  state.p1 = shuffle(MCQ).slice(0, SO_C1).map(it => ({
+    q: it.q, correct: it.a, opts: shuffle(it.opts)
+  }));
+  state.p2 = shuffle(TF).slice(0, SO_C2).map(it => ({
+    q: it.q, correct: it.a
+  }));
+  state.p3 = shuffle(FILL).slice(0, SO_C3).map(it => ({
+    q: it.q, correct: it.a
+  }));
+}
+
+/* ================== HIỂN THỊ ================== */
+const LETTERS = ['A','B','C','D'];
+function render(){
+  document.getElementById('p1box').innerHTML = state.p1.map((q,i)=>`
+    <div class="q" data-i="${i}">
+      <div class="qtext">Câu ${i+1}. ${q.q}</div>
+      <div class="opts">
+        ${q.opts.map((o,j)=>`
+          <label class="opt" data-val="${o.replace(/"/g,'&quot;')}">
+            <input type="radio" name="p1_${i}" value="${o.replace(/"/g,'&quot;')}">
+            <span><b>${LETTERS[j]}.</b> ${o}</span>
+          </label>`).join('')}
+      </div>
+    </div>`).join('');
+
+  document.getElementById('p2box').innerHTML = state.p2.map((q,i)=>`
+    <div class="q" data-i="${i}">
+      <div class="qtext">Câu ${i+1}. ${q.q}</div>
+      <div class="tf">
+        <label class="opt" data-val="true">
+          <input type="radio" name="p2_${i}" value="true"><span>ĐÚNG</span>
+        </label>
+        <label class="opt" data-val="false">
+          <input type="radio" name="p2_${i}" value="false"><span>SAI</span>
+        </label>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('p3box').innerHTML = state.p3.map((q,i)=>`
+    <div class="q fill" data-i="${i}">
+      <div class="qtext">Câu ${i+1}. ${q.q}</div>
+      <input type="text" inputmode="text" id="p3_${i}" placeholder="Nhập đáp án" autocomplete="off">
+    </div>`).join('');
+
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('btnSubmit').disabled = false;
+  document.getElementById('btnSubmit').textContent = "✅ CHẤM BÀI VÀ GỬI KẾT QUẢ";
+  document.getElementById('btnSend').style.display = 'none';
+}
+
+/* ================== CHẤM BÀI ================== */
+function grade(autoSubmit, reason){
+  if(state.graded){ toast("Bạn đã nộp bài rồi!"); return; }
+
+  const name = document.getElementById('sName').value.trim();
+  const cls  = document.getElementById('sClass').value.trim();
+
+  if(!autoSubmit){
+    if(!name || !cls){
+      toast("Vui lòng nhập Họ tên và Lớp trước khi chấm bài!");
+      return;
+    }
+    if(!confirm("Bạn có chắc chắn muốn NỘP BÀI? Mỗi học sinh chỉ được làm 1 lần duy nhất.")) return;
+  } else {
+    toast("⚠️ TỰ ĐỘNG NỘP BÀI: " + reason, true);
+  }
+
+  stopTimer();
+  const timeThisAttempt = state.elapsedSeconds;
+
+  let d1 = 0, d2 = 0, d3 = 0;
+
+  const dung1 = [], dung2 = [], dung3 = [];
+
+  state.p1.forEach((q,i)=>{
+    const sel = document.querySelector(`input[name="p1_${i}"]:checked`);
+    const chosen = sel ? sel.value : null;
+    if(chosen !== null && eqAns(chosen, q.correct)){
+      d1 += DIEM_C1;
+      dung1.push("C" + (i+1));
+    }
+  });
+
+  state.p2.forEach((q,i)=>{
+    const sel = document.querySelector(`input[name="p2_${i}"]:checked`);
+    const chosen = sel ? (sel.value === "true") : null;
+    if(chosen === q.correct){
+      d2 += DIEM_C2;
+      dung2.push("C" + (i+1));
+    }
+  });
+
+  state.p3.forEach((q,i)=>{
+    const inp = document.getElementById('p3_'+i);
+    const val = inp ? inp.value.trim() : "";
+    if(eqAns(val, q.correct)){
+      d3 += DIEM_C3;
+      dung3.push("C" + (i+1));
+    }
+  });
+
+  const total = Math.round((d1 + d2 + d3) * 100) / 100;
+  state.diem = {c1:d1, c2:d2, c3:d3, total:total};
+  state.graded = true;
+  state.elapsedSeconds = timeThisAttempt;
+
+  state.cauDung =
+    "P1[" + (dung1.length ? dung1.join(" ") : "không có") + "] " +
+    "P2[" + (dung2.length ? dung2.join(" ") : "không có") + "] " +
+    "P3[" + (dung3.length ? dung3.join(" ") : "không có") + "]";
+
+  document.querySelectorAll('#p1box input, #p2box input, #p3box input')
+    .forEach(inp => { inp.disabled = true; });
+  document.getElementById('sName').disabled = true;
+  document.getElementById('sClass').disabled = true;
+  document.getElementById('btnSubmit').disabled = true;
+  document.getElementById('btnSubmit').textContent = "🚫 ĐÃ NỘP BÀI";
+
+  document.getElementById('scoreBig').textContent =
+    total.toFixed(2).replace(/\.?0+$/,'') + " / 10";
+  document.getElementById('scoreDetail').innerHTML = `
+    <div>Phần I: ${Math.round(d1*100)/100} / 3</div>
+    <div>Phần II: ${Math.round(d2*100)/100} / 4</div>
+    <div>Phần III: ${Math.round(d3*100)/100} / 3</div>`;
+
+  document.getElementById('timeResult').innerHTML =
+    `⏱️ Thời gian làm bài: <b>${fmt(timeThisAttempt)}</b>`;
+
+  document.getElementById('result').classList.add('show');
+  document.getElementById('result').scrollIntoView({behavior:'smooth', block:'center'});
+
+  sendResult(reason || "");
+}
+
+/* ================== GỬI KẾT QUẢ ================== */
+async function sendResult(reason){
+  if(!state.graded){ toast("Hãy chấm bài trước khi gửi kết quả!"); return; }
+  if(state.sent){ toast("Kết quả đã được gửi rồi!"); return; }
+
+  const name = document.getElementById('sName').value.trim() || "(chưa nhập)";
+  const cls  = document.getElementById('sClass').value.trim() || "(chưa nhập)";
+
+  const viPhamInfo = state.violations === 0
+    ? ""
+    : ` | VI PHẠM: ${state.violations} lần rời tab${reason ? " – " + reason : ""}`;
+
+  const data = {
+    hoTen: name,
+    lop: cls,
+    diem: Math.round(state.diem.total*100)/100,
+    cauDung: state.cauDung + viPhamInfo
+  };
+
+  const btnSend = document.getElementById('btnSend');
+  btnSend.disabled = true;
+
+  try{
+    await fetch(SEND_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(data)
+    });
+    state.sent = true;
+    toast("✅ Đã gửi kết quả thành công!");
+  }catch(e){
+    try{
+      const qs = new URLSearchParams(data).toString();
+      await fetch(SEND_URL + "?" + qs, {mode:'no-cors'});
+      state.sent = true;
+      toast("✅ Đã gửi kết quả thành công!");
+    }catch(err){
+      toast("❌ Gửi thất bại! Bấm nút GỬI LẠI để thử lại.");
+      btnSend.disabled = false;
+      btnSend.style.display = 'block';
+      btnSend.textContent = "📤 GỬI LẠI KẾT QUẢ";
+    }
+  }
+}
+
+/* =============================================================
+   CHỐNG GIAN LẬN TRÊN ĐIỆN THOẠI
+   ============================================================= */
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('long-press', e => e.preventDefault());
+document.addEventListener('copy', e => e.preventDefault());
+document.addEventListener('cut', e => e.preventDefault());
+document.addEventListener('selectstart', e => {
+  if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA'){
+    e.preventDefault();
+  }
+});
+
+document.addEventListener('keydown', function(e){
+  if(e.key === 'PrintScreen' || e.keyCode === 44){
+    e.preventDefault();
+    flashBlur("Phím chụp màn hình đã bị vô hiệu hoá");
+  }
+  if(e.metaKey && e.shiftKey && ['3','4','5'].includes(e.key)) e.preventDefault();
+  if(e.ctrlKey && e.shiftKey && e.key === 'S') e.preventDefault();
+  if(e.key === 'F12') e.preventDefault();
+});
+
+document.addEventListener('keyup', function(e){
+  if(e.key === 'PrintScreen' || e.keyCode === 44){
+    navigator.clipboard && navigator.clipboard.writeText("").catch(()=>{});
+  }
+});
+
+function flashBlur(msg){
+  const body = document.body;
+  body.classList.add('blurred');
+  const ov = document.getElementById('blurOverlay');
+  ov.classList.add('show');
+  const sub = ov.querySelector('.sub');
+  if(sub) sub.innerHTML = msg + "<br>Hành vi này đã được ghi lại.";
+  setTimeout(()=>{
+    body.classList.remove('blurred');
+    ov.classList.remove('show');
+  }, 1500);
+}
+
+function handleLeave(){
+  if(!state.examStarted || state.graded) return;
+
+  state.leaveTime = Date.now();
+  state.violations += 1;
+  state.violationLog.push({
+    time: new Date().toLocaleTimeString('vi-VN'),
+    type: 'leave'
+  });
+  updateViolationUI();
+
+  document.body.classList.add('blurred');
+  document.getElementById('blurOverlay').classList.add('show');
+
+  if(state.violations >= MAX_VIOLATIONS){
+    autoSubmit("Đã rời màn hình đủ " + MAX_VIOLATIONS + " lần");
+    return;
+  }
+
+  if(state.leaveTimerId) clearTimeout(state.leaveTimerId);
+  state.leaveTimerId = setTimeout(()=>{
+    autoSubmit("Rời màn hình quá " + MAX_LEAVE_SECONDS + " giây");
+  }, MAX_LEAVE_SECONDS * 1000);
+}
+
+function handleReturn(){
+  if(!state.examStarted || state.graded) return;
+
+  const leftDur = state.leaveTime ? (Date.now() - state.leaveTime)/1000 : 0;
+
+  if(state.leaveTimerId){ clearTimeout(state.leaveTimerId); state.leaveTimerId = null; }
+
+  if(leftDur < GRACE_SECONDS && state.violations > 0){
+    state.violations -= 1;
+    state.violationLog.pop();
+    updateViolationUI();
+    document.body.classList.remove('blurred');
+    document.getElementById('blurOverlay').classList.remove('show');
+    return;
+  }
+
+  document.body.classList.remove('blurred');
+  document.getElementById('blurOverlay').classList.remove('show');
+  showWarnModal();
+}
+
+document.addEventListener('visibilitychange', function(){
+  if(document.hidden) handleLeave();
+  else handleReturn();
+});
+
+window.addEventListener('blur', function(){
+  setTimeout(()=>{
+    if(document.hidden || !document.hasFocus()){
+      if(!document.body.classList.contains('blurred')) handleLeave();
+    }
+  }, 100);
+});
+window.addEventListener('focus', function(){
+  if(document.body.classList.contains('blurred')){
+    handleReturn();
+  }
+});
+
+window.addEventListener('beforeunload', function(e){
+  if(state.examStarted && !state.graded){
+    e.preventDefault();
+    e.returnValue = "Bài làm sẽ bị mất. Bạn có chắc muốn rời đi?";
+    return e.returnValue;
+  }
+});
+
+function showWarnModal(){
+  const modal = document.getElementById('warnModal');
+  const countEl = document.getElementById('warnCount');
+  const msgEl = document.getElementById('warnMsg');
+
+  countEl.textContent = `Lần ${state.violations} / ${MAX_VIOLATIONS}`;
+  msgEl.textContent = "Bạn vừa rời khỏi màn hình làm bài. Hệ thống đã ghi nhận hành vi này.";
+
+  if(state.violations === MAX_VIOLATIONS - 1){
+    msgEl.textContent = "⚠️ CHÚ Ý: Bạn chỉ còn 1 lần nữa. Vi phạm tiếp theo sẽ bị tự động nộp bài!";
+  }
+
+  modal.classList.add('show');
+}
+
+document.getElementById('warnBtn').addEventListener('click', function(){
+  document.getElementById('warnModal').classList.remove('show');
+});
+
+function autoSubmit(reason){
+  if(state.graded) return;
+  if(state.leaveTimerId){ clearTimeout(state.leaveTimerId); state.leaveTimerId = null; }
+  document.body.classList.remove('blurred');
+  document.getElementById('blurOverlay').classList.remove('show');
+  document.getElementById('warnModal').classList.remove('show');
+  grade(true, reason);
+}
+
+/* ================== BẮT ĐẦU LÀM BÀI ================== */
+function startExam(){
+  document.getElementById('startOverlay').classList.add('hide');
+
+  const el = document.documentElement;
+  const reqFS = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+  if(reqFS){
+    reqFS.call(el).catch(()=>{});
+  }
+
+  if(screen.orientation && screen.orientation.lock){
+    screen.orientation.lock('portrait').catch(()=>{});
+  }
+
+  state.examStarted = true;
+  state.violations = 0;
+  state.violationLog = [];
+  updateViolationUI();
+
+  buildQuiz();
+  render();
+  startTimer();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+document.getElementById('btnStart').addEventListener('click', startExam);
+document.getElementById('btnSubmit').addEventListener('click', () => grade(false));
+document.getElementById('btnSend').addEventListener('click', () => sendResult(""));
+</script>
+</body>
+</html>
